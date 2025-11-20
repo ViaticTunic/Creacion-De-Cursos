@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 import ImageCropper from '../components/ImageCropper';
 import CategoriaSelector from '../components/CategoriaSelector';
 import ModuloManager from '../components/ModuloManager';
@@ -10,6 +11,7 @@ import './EditarCurso.css';
 const EditarCurso = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { loading: authLoading, isAuthenticated } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [categorias, setCategorias] = useState([]);
@@ -147,9 +149,12 @@ const EditarCurso = () => {
   }, [id, navigate]);
 
   useEffect(() => {
-    fetchCategorias();
-    fetchCurso();
-  }, [fetchCurso]);
+    // Esperar a que la autenticación termine antes de hacer las peticiones
+    if (!authLoading && isAuthenticated) {
+      fetchCategorias();
+      fetchCurso();
+    }
+  }, [authLoading, isAuthenticated, fetchCurso]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -422,8 +427,14 @@ const EditarCurso = () => {
     }
   };
 
-  if (loading) {
+  // Mostrar loading mientras se autentica o carga el curso
+  if (authLoading || loading) {
     return <div className="loading">Cargando...</div>;
+  }
+
+  // Si no está autenticado después de cargar, redirigir
+  if (!authLoading && !isAuthenticated) {
+    return <div className="loading">Error de autenticación. Redirigiendo...</div>;
   }
 
   return (
