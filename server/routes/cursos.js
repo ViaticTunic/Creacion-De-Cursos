@@ -391,7 +391,16 @@ router.put('/:id', verifyInstructor, upload.single('imagen_portada'), async (req
     
     // Convertir ruta de imagen a URL completa si existe
     if (cursoActualizado.imagen_portada && !cursoActualizado.imagen_portada.startsWith('http')) {
-      cursoActualizado.imagen_portada = `/uploads/courses/${cursoActualizado.imagen_portada}`;
+      // Verificar si el archivo existe en el servidor
+      const imagePath = path.join('uploads/courses', cursoActualizado.imagen_portada);
+      if (fs.existsSync(imagePath)) {
+        cursoActualizado.imagen_portada = `/uploads/courses/${cursoActualizado.imagen_portada}`;
+      } else {
+        console.warn(`⚠️ Imagen no encontrada en el servidor: ${imagePath}`);
+        // En producción (Render), las imágenes pueden perderse por el sistema de archivos efímero
+        // Por ahora, mantenemos la ruta pero el frontend debería manejar el error
+        cursoActualizado.imagen_portada = `/uploads/courses/${cursoActualizado.imagen_portada}`;
+      }
     }
 
     res.json({ 

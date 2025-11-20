@@ -60,16 +60,34 @@ const EditarCurso = () => {
       // Si el curso tiene una imagen de portada, la cargamos y mostramos
       if (curso.imagen_portada) {
         // Construimos la URL completa de la imagen usando la función helper
-        // Agregamos un timestamp para evitar problemas de cache
         const imageUrl = getImageUrl(curso.imagen_portada, 'courses');
-        const imageUrlWithCache = imageUrl ? `${imageUrl}?t=${Date.now()}` : null;
         console.log('Cargando imagen del curso:', {
           original: curso.imagen_portada,
-          url: imageUrl,
-          urlWithCache: imageUrlWithCache
+          url: imageUrl
         });
-        setImagenActual(imageUrl);
-        setImagenPreview(imageUrlWithCache);
+        
+        // Verificar si la imagen existe antes de establecerla
+        // Si no existe, no la mostramos (puede haberse perdido en Render)
+        if (imageUrl) {
+          // Intentar cargar la imagen para verificar que existe
+          const img = new Image();
+          img.onload = () => {
+            // Si la imagen carga correctamente, establecerla
+            setImagenActual(imageUrl);
+            setImagenPreview(imageUrl);
+          };
+          img.onerror = () => {
+            // Si la imagen no existe, no establecerla
+            console.warn('⚠️ La imagen no existe en el servidor:', imageUrl);
+            console.warn('💡 Nota: En Render, las imágenes pueden perderse al reiniciar el servidor.');
+            setImagenActual(null);
+            setImagenPreview(null);
+          };
+          img.src = imageUrl;
+        } else {
+          setImagenActual(null);
+          setImagenPreview(null);
+        }
       } else {
         // Si no hay imagen, limpiar los estados
         setImagenActual(null);
