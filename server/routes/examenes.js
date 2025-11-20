@@ -135,9 +135,12 @@ router.post('/', async (req, res) => {
       ]
     );
 
+    // El ID debería estar en result.insertId (agregado por la función de conversión)
+    const examenId = result.insertId || result[0]?.insertId || result[0]?.id;
+    
     res.status(201).json({
       message: 'Examen creado exitosamente',
-      examenId: result.insertId
+      examenId: examenId
     });
   } catch (error) {
     console.error('Error al crear examen:', error);
@@ -254,9 +257,12 @@ router.post('/:examenId/preguntas', async (req, res) => {
       ]
     );
 
+    // El ID debería estar en result.insertId (agregado por la función de conversión)
+    const preguntaId = result.insertId || result[0]?.insertId || result[0]?.id;
+    
     res.status(201).json({
       message: 'Pregunta creada exitosamente',
-      preguntaId: result.insertId
+      preguntaId: preguntaId
     });
   } catch (error) {
     console.error('Error al crear pregunta:', error);
@@ -287,20 +293,20 @@ router.post('/preguntas/:preguntaId/opciones', async (req, res) => {
       return res.status(404).json({ error: 'Pregunta no encontrada' });
     }
 
-    // Insertar todas las opciones
-    const values = opciones.map(op => [
-      preguntaId,
-      op.texto_opcion,
-      op.es_correcta || false,
-      op.orden || 0
-    ]);
-
-    await db.promise.query(
-      `INSERT INTO opciones_respuesta 
-       (pregunta_id, texto_opcion, es_correcta, orden)
-       VALUES ?`,
-      [values]
-    );
+    // Insertar todas las opciones (una por una para compatibilidad con PostgreSQL)
+    for (const op of opciones) {
+      await db.promise.query(
+        `INSERT INTO opciones_respuesta 
+         (pregunta_id, texto_opcion, es_correcta, orden)
+         VALUES (?, ?, ?, ?)`,
+        [
+          preguntaId,
+          op.texto_opcion,
+          op.es_correcta || false,
+          op.orden || 0
+        ]
+      );
+    }
 
     res.status(201).json({ message: 'Opciones creadas exitosamente' });
   } catch (error) {
