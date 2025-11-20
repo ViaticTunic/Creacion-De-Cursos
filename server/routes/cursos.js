@@ -373,12 +373,31 @@ router.put('/:id', verifyInstructor, upload.single('imagen_portada'), async (req
     if (updateFields.length > 0) {
       updateValues.push(id);
       await db.promise.query(
-        `UPDATE cursos SET ${updateFields.join(', ')} WHERE id = ?`,
+        `UPDATE cursos SET ${updateFields.join(', ')}, fecha_actualizacion = CURRENT_TIMESTAMP WHERE id = ?`,
         updateValues
       );
     }
 
-    res.json({ message: 'Curso actualizado exitosamente' });
+    // Obtener el curso actualizado para devolverlo
+    const [cursosActualizados] = await db.promise.query(
+      `SELECT c.*, cat.nombre as categoria_nombre 
+       FROM cursos c
+       LEFT JOIN categorias cat ON c.categoria_id = cat.id
+       WHERE c.id = ?`,
+      [id]
+    );
+
+    const cursoActualizado = cursosActualizados[0];
+    
+    // Convertir ruta de imagen a URL completa si existe
+    if (cursoActualizado.imagen_portada && !cursoActualizado.imagen_portada.startsWith('http')) {
+      cursoActualizado.imagen_portada = `/uploads/courses/${cursoActualizado.imagen_portada}`;
+    }
+
+    res.json({ 
+      message: 'Curso actualizado exitosamente',
+      curso: cursoActualizado
+    });
   } catch (error) {
     console.error('Error al actualizar curso:', error);
     res.status(500).json({ error: 'Error al actualizar curso' });

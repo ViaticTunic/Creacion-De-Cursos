@@ -60,13 +60,16 @@ const EditarCurso = () => {
       // Si el curso tiene una imagen de portada, la cargamos y mostramos
       if (curso.imagen_portada) {
         // Construimos la URL completa de la imagen usando la función helper
+        // Agregamos un timestamp para evitar problemas de cache
         const imageUrl = getImageUrl(curso.imagen_portada, 'courses');
+        const imageUrlWithCache = imageUrl ? `${imageUrl}?t=${Date.now()}` : null;
         console.log('Cargando imagen del curso:', {
           original: curso.imagen_portada,
-          url: imageUrl
+          url: imageUrl,
+          urlWithCache: imageUrlWithCache
         });
         setImagenActual(imageUrl);
-        setImagenPreview(imageUrl);
+        setImagenPreview(imageUrlWithCache);
       } else {
         // Si no hay imagen, limpiar los estados
         setImagenActual(null);
@@ -275,7 +278,7 @@ const EditarCurso = () => {
         formDataToSend.append('imagen_portada', '');
       }
 
-      await axios.put(`/api/cursos/${id}`, formDataToSend, {
+      const response = await axios.put(`/api/cursos/${id}`, formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -417,8 +420,29 @@ const EditarCurso = () => {
         }
       }
 
+      // Si la respuesta incluye el curso actualizado, actualizar el estado inmediatamente
+      if (response.data.curso) {
+        const cursoActualizado = response.data.curso;
+        // Actualizar la imagen si cambió
+        if (cursoActualizado.imagen_portada) {
+          const imageUrl = getImageUrl(cursoActualizado.imagen_portada, 'courses');
+          const imageUrlWithCache = `${imageUrl}?t=${Date.now()}`;
+          setImagenActual(imageUrl);
+          setImagenPreview(imageUrlWithCache);
+        } else {
+          setImagenActual(null);
+          setImagenPreview(null);
+        }
+        // Limpiar el blob de la imagen recortada ya que ya se guardó
+        setCroppedImageBlob(null);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+      }
+      
       alert('Curso actualizado exitosamente');
-      fetchCurso();
+      // Recargar el curso completo para asegurar que todo esté sincronizado
+      await fetchCurso();
     } catch (error) {
       console.error('Error al actualizar curso:', error);
       alert(error.response?.data?.error || 'Error al actualizar el curso');
