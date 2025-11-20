@@ -75,6 +75,19 @@ const uploadDocumentos = multer({
   }
 });
 
+// Ruta pública: Obtener todas las categorías (debe estar ANTES del middleware de autenticación)
+router.get('/categorias/list', async (req, res) => {
+  try {
+    const [categorias] = await db.promise.query(
+      'SELECT * FROM categorias ORDER BY nombre ASC'
+    );
+    res.json(categorias);
+  } catch (error) {
+    console.error('Error al obtener categorías:', error);
+    res.status(500).json({ error: 'Error al obtener categorías' });
+  }
+});
+
 // Todas las rutas requieren autenticación
 router.use(verifyToken);
 
@@ -370,19 +383,6 @@ router.delete('/:id', verifyInstructor, async (req, res) => {
   } catch (error) {
     console.error('Error al eliminar curso:', error);
     res.status(500).json({ error: 'Error al eliminar curso' });
-  }
-});
-
-// Obtener todas las categorías
-router.get('/categorias/list', async (req, res) => {
-  try {
-    const [categorias] = await db.promise.query(
-      'SELECT * FROM categorias ORDER BY nombre ASC'
-    );
-    res.json(categorias);
-  } catch (error) {
-    console.error('Error al obtener categorías:', error);
-    res.status(500).json({ error: 'Error al obtener categorías' });
   }
 });
 
