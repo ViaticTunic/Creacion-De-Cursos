@@ -94,16 +94,21 @@ router.use(verifyToken);
 // Obtener todos los cursos del instructor
 router.get('/mis-cursos', verifyInstructor, async (req, res) => {
   try {
+    // PostgreSQL requiere que todas las columnas no agregadas estén en GROUP BY
+    // Usamos una subconsulta para evitar problemas con GROUP BY
     const [cursos] = await db.promise.query(
-      `SELECT c.*, cat.nombre as categoria_nombre, 
-       COUNT(DISTINCT m.id) as total_modulos,
-       COUNT(DISTINCT l.id) as total_lecciones
+      `SELECT 
+        c.id, c.instructor_id, c.titulo, c.descripcion, c.categoria_id, 
+        c.precio, c.imagen_portada, c.nivel, c.duracion_horas, c.idioma, 
+        c.estado, c.fecha_creacion, c.fecha_actualizacion,
+        cat.nombre as categoria_nombre,
+        (SELECT COUNT(*) FROM modulos m WHERE m.curso_id = c.id) as total_modulos,
+        (SELECT COUNT(*) FROM lecciones l 
+         INNER JOIN modulos m ON l.modulo_id = m.id 
+         WHERE m.curso_id = c.id) as total_lecciones
        FROM cursos c
        LEFT JOIN categorias cat ON c.categoria_id = cat.id
-       LEFT JOIN modulos m ON c.id = m.curso_id
-       LEFT JOIN lecciones l ON m.id = l.modulo_id
        WHERE c.instructor_id = ?
-       GROUP BY c.id
        ORDER BY c.fecha_creacion DESC`,
       [req.user.id]
     );
