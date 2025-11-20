@@ -37,6 +37,11 @@ if (process.env.DATABASE_URL) {
       pgSql = pgSql.replace(/\?/g, () => `$${paramIndex++}`);
     }
     
+    // Para INSERT, agregar RETURNING id si no está presente
+    if (pgSql.toUpperCase().startsWith('INSERT') && !pgSql.toUpperCase().includes('RETURNING')) {
+      pgSql += ' RETURNING id';
+    }
+    
     return pgSql;
   }
 
@@ -75,9 +80,13 @@ if (process.env.DATABASE_URL) {
       
       // Formatear resultado para compatibilidad con MySQL
       let rows = result.rows;
+      
+      // Si es un INSERT con RETURNING, el ID estará en result.rows[0].id
       if (rows && rows.length > 0 && rows[0].id !== undefined) {
         rows.insertId = rows[0].id;
-        rows[0].insertId = rows[0].id;
+        if (rows[0]) {
+          rows[0].insertId = rows[0].id;
+        }
       }
       
       return [rows];

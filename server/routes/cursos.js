@@ -430,9 +430,12 @@ router.post('/:id/modulos', verifyInstructor, async (req, res) => {
       [id, titulo, descripcion || null, orden || 0]
     );
 
+    // El ID debería estar en result.insertId (agregado por la función de conversión)
+    const moduloId = result.insertId || result[0]?.insertId || result[0]?.id;
+
     res.status(201).json({
       message: 'Módulo creado exitosamente',
-      moduloId: result.insertId
+      moduloId: moduloId
     });
   } catch (error) {
     console.error('Error al crear módulo:', error);
