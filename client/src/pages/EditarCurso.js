@@ -57,11 +57,18 @@ const EditarCurso = () => {
       
       // Si el curso tiene una imagen de portada, la cargamos y mostramos
       if (curso.imagen_portada) {
-        // Construimos la URL completa de la imagen
-        // Construimos la URL de la imagen usando la función helper
+        // Construimos la URL completa de la imagen usando la función helper
         const imageUrl = getImageUrl(curso.imagen_portada, 'courses');
+        console.log('Cargando imagen del curso:', {
+          original: curso.imagen_portada,
+          url: imageUrl
+        });
         setImagenActual(imageUrl);
         setImagenPreview(imageUrl);
+      } else {
+        // Si no hay imagen, limpiar los estados
+        setImagenActual(null);
+        setImagenPreview(null);
       }
 
       // Convertimos los módulos que vienen del servidor al formato que espera ModuloManager

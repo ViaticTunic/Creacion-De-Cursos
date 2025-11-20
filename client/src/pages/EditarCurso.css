@@ -48,6 +48,12 @@
   width: 100%;
   max-width: 600px;
   border-radius: 12px;
+}
+
+.image-preview-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
   overflow: hidden;
   border: 2px solid #e2e8f0;
   background: #f7fafc;
