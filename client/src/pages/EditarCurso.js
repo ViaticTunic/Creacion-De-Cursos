@@ -253,10 +253,14 @@ const EditarCurso = () => {
       formDataToSend.append('estado', formData.estado);
 
       // Si hay una imagen recortada, usar esa; si no, usar el archivo original
+      // Si imagenActual es null, significa que se eliminó la imagen
       if (croppedImageBlob) {
         formDataToSend.append('imagen_portada', croppedImageBlob, 'course-cover.jpg');
       } else if (fileInputRef.current?.files[0]) {
         formDataToSend.append('imagen_portada', fileInputRef.current.files[0]);
+      } else if (!imagenActual) {
+        // Si no hay imagen actual, enviar null para eliminar la imagen
+        formDataToSend.append('imagen_portada', '');
       }
 
       await axios.put(`/api/cursos/${id}`, formDataToSend, {
@@ -464,23 +468,53 @@ const EditarCurso = () => {
             <div className="image-upload-container">
               {imagenPreview ? (
                 <div className="image-preview">
-                  <img src={imagenPreview} alt="Preview" />
-                  <button
-                    type="button"
-                    className="btn-remove-image"
-                    onClick={() => {
-                      setImagenPreview(imagenActual);
-                      setCroppedImageBlob(null);
-                      if (fileInputRef.current) {
-                        fileInputRef.current.value = '';
-                      }
-                      if (imagenPreview && imagenPreview.startsWith('blob:')) {
-                        URL.revokeObjectURL(imagenPreview);
-                      }
+                  <img 
+                    src={imagenPreview} 
+                    alt="Preview" 
+                    onError={(e) => {
+                      console.error('Error al cargar imagen:', imagenPreview);
+                      e.target.style.display = 'none';
                     }}
-                  >
-                    ✕ Cancelar cambio
-                  </button>
+                  />
+                  <div className="image-preview-actions">
+                    {imagenPreview !== imagenActual && (
+                      <button
+                        type="button"
+                        className="btn-remove-image"
+                        onClick={() => {
+                          // Cancelar el cambio y restaurar la imagen original
+                          setImagenPreview(imagenActual);
+                          setCroppedImageBlob(null);
+                          if (fileInputRef.current) {
+                            fileInputRef.current.value = '';
+                          }
+                          if (imagenPreview && (imagenPreview.startsWith('blob:') || imagenPreview.startsWith('data:'))) {
+                            URL.revokeObjectURL(imagenPreview);
+                          }
+                        }}
+                      >
+                        ✕ Cancelar cambio
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      className="btn-remove-image"
+                      onClick={() => {
+                        // Eliminar completamente la imagen
+                        setImagenActual(null);
+                        setImagenPreview(null);
+                        setCroppedImageBlob(null);
+                        if (fileInputRef.current) {
+                          fileInputRef.current.value = '';
+                        }
+                        if (imagenPreview && (imagenPreview.startsWith('blob:') || imagenPreview.startsWith('data:'))) {
+                          URL.revokeObjectURL(imagenPreview);
+                        }
+                      }}
+                    >
+                      🗑️ Eliminar imagen
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <label className="image-upload-label">

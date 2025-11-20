@@ -306,11 +306,26 @@ router.put('/:id', verifyInstructor, upload.single('imagen_portada'), async (req
     const updateFields = [];
     const updateValues = [];
 
+    // Verificar si se quiere eliminar la imagen (se envía una cadena vacía)
+    const deleteImage = req.body.imagen_portada === '' || req.body.imagen_portada === 'null';
+
     // Si se subió una nueva imagen
     if (req.file) {
       imagenPortadaPath = req.file.filename;
       updateFields.push('imagen_portada = ?');
       updateValues.push(imagenPortadaPath);
+
+      // Eliminar imagen anterior si existe
+      if (cursos[0].imagen_portada) {
+        const oldImagePath = path.join('uploads/courses', path.basename(cursos[0].imagen_portada));
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath);
+        }
+      }
+    } else if (deleteImage) {
+      // Si se quiere eliminar la imagen (sin subir una nueva)
+      updateFields.push('imagen_portada = ?');
+      updateValues.push(null);
 
       // Eliminar imagen anterior si existe
       if (cursos[0].imagen_portada) {
