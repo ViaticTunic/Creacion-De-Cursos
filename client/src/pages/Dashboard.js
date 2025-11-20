@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'; // Para crear enlaces entre páginas
 import axios from 'axios'; // Para hacer peticiones al servidor (traer datos, enviar datos)
 import { AuthContext } from '../context/AuthContext'; // Para saber si el usuario está autenticado
 import BadgeDisplay from '../components/BadgeDisplay'; // Componente para mostrar las insignias
+import { getImageUrl } from '../utils/api'; // Función para construir URLs de imágenes
 import './Dashboard.css'; // Los estilos de esta página
 
 // Este es el componente principal del Dashboard (la página principal del instructor)
@@ -142,11 +143,7 @@ const Dashboard = () => {
                         - Si no, asumimos que está en la carpeta uploads/courses
                       */}
                       <img 
-                        src={curso.imagen_portada.startsWith('http') 
-                          ? curso.imagen_portada 
-                          : curso.imagen_portada.startsWith('/')
-                          ? `http://localhost:5000${curso.imagen_portada}`
-                          : `http://localhost:5000/uploads/courses/${curso.imagen_portada}`} 
+                        src={getImageUrl(curso.imagen_portada, 'courses')} 
                         alt={curso.titulo}
                       />
                     </div>

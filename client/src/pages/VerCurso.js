@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import BadgeDisplay from '../components/BadgeDisplay';
+import { getImageUrl, getContentUrl } from '../utils/api';
 import './VerCurso.css';
 
 const VerCurso = () => {
@@ -38,22 +39,6 @@ const VerCurso = () => {
     }
   };
 
-  // Función auxiliar para construir la URL completa de una imagen
-  // A veces las imágenes vienen solo con el nombre, otras veces con la ruta completa
-  const getImageUrl = (imagePath) => {
-    if (!imagePath) return null; // Si no hay imagen, devolvemos null
-    if (imagePath.startsWith('http')) return imagePath; // Si ya es una URL completa, la devolvemos
-    if (imagePath.startsWith('/')) return `http://localhost:5000${imagePath}`; // Si empieza con /, agregamos localhost
-    return `http://localhost:5000/uploads/courses/${imagePath}`; // Si no, está en la carpeta uploads/courses
-  };
-
-  // Función auxiliar para construir la URL completa de un archivo (PDF, Word, etc.)
-  const getContentUrl = (url) => {
-    if (!url) return null; // Si no hay URL, devolvemos null
-    if (url.startsWith('http')) return url; // Si ya es una URL completa, la devolvemos
-    if (url.startsWith('/')) return `http://localhost:5000${url}`; // Si empieza con /, agregamos localhost
-    return `http://localhost:5000${url}`; // Si no, agregamos localhost al inicio
-  };
 
   if (loading) {
     return <div className="loading">Cargando...</div>;

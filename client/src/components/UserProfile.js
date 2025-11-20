@@ -2,6 +2,7 @@ import React, { useState, useRef, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import ImageCropper from './ImageCropper';
+import { getImageUrl } from '../utils/api';
 import './UserProfile.css';
 
 const UserProfile = ({ user, onClose, onUpdate }) => {
@@ -11,11 +12,7 @@ const UserProfile = ({ user, onClose, onUpdate }) => {
     biografia: user?.biografia || ''
   });
   const [fotoPreview, setFotoPreview] = useState(
-    user?.foto_perfil 
-      ? (user.foto_perfil.startsWith('http') || user.foto_perfil.startsWith('/')
-          ? user.foto_perfil
-          : `http://localhost:5000/uploads/profiles/${user.foto_perfil}`)
-      : null
+    user?.foto_perfil ? getImageUrl(user.foto_perfil, 'profiles') : null
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -185,8 +182,7 @@ const UserProfile = ({ user, onClose, onUpdate }) => {
                   src={fotoPreview.startsWith('data:') || fotoPreview.startsWith('http') || fotoPreview.startsWith('blob:')
                     ? fotoPreview 
                     : fotoPreview.startsWith('/')
-                    ? `http://localhost:5000${fotoPreview}`
-                    : `http://localhost:5000/uploads/profiles/${fotoPreview}`} 
+                    getImageUrl(fotoPreview, 'profiles')} 
                   alt="Foto de perfil" 
                   className="profile-avatar-image"
                   onError={(e) => {

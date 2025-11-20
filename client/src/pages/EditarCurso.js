@@ -4,6 +4,7 @@ import axios from 'axios';
 import ImageCropper from '../components/ImageCropper';
 import CategoriaSelector from '../components/CategoriaSelector';
 import ModuloManager from '../components/ModuloManager';
+import { getImageUrl } from '../utils/api';
 import './EditarCurso.css';
 
 const EditarCurso = () => {
@@ -57,12 +58,8 @@ const EditarCurso = () => {
       // Si el curso tiene una imagen de portada, la cargamos y mostramos
       if (curso.imagen_portada) {
         // Construimos la URL completa de la imagen
-        // Puede venir en diferentes formatos, así que verificamos cada uno
-        const imageUrl = curso.imagen_portada.startsWith('http') 
-          ? curso.imagen_portada // Si ya es una URL completa, la usamos tal cual
-          : curso.imagen_portada.startsWith('/')
-          ? `http://localhost:5000${curso.imagen_portada}` // Si empieza con /, agregamos localhost
-          : `http://localhost:5000/uploads/courses/${curso.imagen_portada}`; // Si no, está en uploads/courses
+        // Construimos la URL de la imagen usando la función helper
+        const imageUrl = getImageUrl(curso.imagen_portada, 'courses');
         setImagenActual(imageUrl);
         setImagenPreview(imageUrl);
       }

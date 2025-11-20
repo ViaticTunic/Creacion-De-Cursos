@@ -264,9 +264,12 @@ router.post('/', verifyInstructor, upload.single('imagen_portada'), async (req, 
       ]
     );
 
+    // En PostgreSQL, el ID se devuelve en result.rows[0].id o result.insertId
+    const cursoId = result.insertId || result[0]?.insertId || result[0]?.id;
+    
     res.status(201).json({
       message: 'Curso creado exitosamente',
-      cursoId: result.insertId
+      cursoId: cursoId
     });
   } catch (error) {
     console.error('Error al crear curso:', error);

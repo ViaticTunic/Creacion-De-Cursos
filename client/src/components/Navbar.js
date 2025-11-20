@@ -2,6 +2,7 @@ import React, { useContext, useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import UserProfile from './UserProfile';
+import { getImageUrl } from '../utils/api';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -74,11 +75,7 @@ const Navbar = () => {
                   {user.foto_perfil ? (
                     <>
                       <img 
-                        src={user.foto_perfil.startsWith('http') 
-                          ? user.foto_perfil 
-                          : user.foto_perfil.startsWith('/')
-                          ? `http://localhost:5000${user.foto_perfil}`
-                          : `http://localhost:5000/uploads/profiles/${user.foto_perfil}`} 
+                        src={getImageUrl(user.foto_perfil, 'profiles')} 
                         alt={user.nombre || 'Instructor'} 
                         className="avatar-image"
                         onError={(e) => {
