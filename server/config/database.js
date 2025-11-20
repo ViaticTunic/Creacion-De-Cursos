@@ -24,12 +24,19 @@ if (process.env.DATABASE_URL) {
   });
 
   // Función para convertir consultas de MySQL a PostgreSQL
-  function convertMySQLToPostgreSQL(sql) {
+  function convertMySQLToPostgreSQL(sql, params) {
     let pgSql = sql.trim();
     // Reemplazar backticks por comillas dobles
     pgSql = pgSql.replace(/`([^`]+)`/g, '"$1"');
     // Convertir LIMIT offset, count a LIMIT count OFFSET offset
     pgSql = pgSql.replace(/LIMIT\s+(\d+)\s*,\s*(\d+)/gi, 'LIMIT $2 OFFSET $1');
+    
+    // Convertir placeholders ? a $1, $2, etc. para PostgreSQL
+    if (params && params.length > 0) {
+      let paramIndex = 1;
+      pgSql = pgSql.replace(/\?/g, () => `$${paramIndex++}`);
+    }
+    
     return pgSql;
   }
 
@@ -43,7 +50,7 @@ if (process.env.DATABASE_URL) {
             cb = params;
             params = [];
           }
-          const pgSql = convertMySQLToPostgreSQL(sql);
+          const pgSql = convertMySQLToPostgreSQL(sql, params);
           client.query(pgSql, params, (err, result) => {
             if (err) return cb(err, null);
             const mysqlResult = {
@@ -63,8 +70,8 @@ if (process.env.DATABASE_URL) {
   // Promisificar para usar async/await (compatible con db.promise.query)
   const promisePool = {
     query: async (sql, params) => {
-      const pgSql = convertMySQLToPostgreSQL(sql);
-      const result = await pool.query(pgSql, params);
+      const pgSql = convertMySQLToPostgreSQL(sql, params || []);
+      const result = await pool.query(pgSql, params || []);
       
       // Formatear resultado para compatibilidad con MySQL
       let rows = result.rows;
