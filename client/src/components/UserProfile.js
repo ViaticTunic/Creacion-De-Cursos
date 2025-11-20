@@ -243,7 +243,7 @@ const UserProfile = ({ user, onClose, onUpdate }) => {
             </button>
             <button 
               type="submit" 
-              className="btn btn-primary" 
+              className="btn btn-primary btn-save-profile" 
               disabled={loading || wordCount > 100}
             >
               {loading ? 'Guardando...' : 'Guardar Cambios'}
