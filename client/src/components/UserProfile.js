@@ -181,8 +181,7 @@ const UserProfile = ({ user, onClose, onUpdate }) => {
                 <img 
                   src={fotoPreview.startsWith('data:') || fotoPreview.startsWith('http') || fotoPreview.startsWith('blob:')
                     ? fotoPreview 
-                    : fotoPreview.startsWith('/')
-                    getImageUrl(fotoPreview, 'profiles')} 
+                    : getImageUrl(fotoPreview, 'profiles')} 
                   alt="Foto de perfil" 
                   className="profile-avatar-image"
                   onError={(e) => {
