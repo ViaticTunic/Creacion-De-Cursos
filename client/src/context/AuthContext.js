@@ -82,12 +82,14 @@ export const AuthProvider = ({ children }) => {
 
       // Si no hay token o el token no es válido, hacemos login automático con las credenciales por defecto
       try {
+        console.log('Intentando auto-login...');
         const response = await axios.post('/api/auth/login', { 
           email: DEFAULT_EMAIL, 
           password: DEFAULT_PASSWORD 
         });
         const { token: newToken, user: userData } = response.data;
         
+        console.log('Auto-login exitoso, token obtenido');
         setToken(newToken);
         setUser(userData);
         localStorage.setItem('token', newToken);
@@ -95,8 +97,13 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
       } catch (error) {
         console.error('Error en auto-login:', error);
+        console.error('Detalles del error:', {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status
+        });
         if (error.code === 'ECONNREFUSED' || error.message.includes('Network Error')) {
-          console.error('No se pudo conectar al servidor. Asegúrate de que el servidor esté corriendo en el puerto 5000.');
+          console.error('No se pudo conectar al servidor. Verifica que el servidor esté corriendo.');
         }
         setLoading(false);
       }
