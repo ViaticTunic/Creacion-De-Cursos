@@ -1,0 +1,303 @@
+.examen-form-container {
+  margin-top: 20px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.examen-form-header {
+  margin-bottom: 20px;
+}
+
+.examen-form-header h4 {
+  margin: 0 0 8px 0;
+  color: #1a202c;
+  font-size: 16px;
+}
+
+.examen-form-description {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.examen-form-fields {
+  margin-bottom: 20px;
+}
+
+.examen-form-container .form-group {
+  margin-bottom: 15px;
+}
+
+.examen-form-container .form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #374151;
+  font-size: 14px;
+}
+
+.examen-form-container .form-group input[type="text"],
+.examen-form-container .form-group input[type="number"],
+.examen-form-container .form-group textarea,
+.examen-form-container .form-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.examen-form-container .form-group input:focus,
+.examen-form-container .form-group textarea:focus,
+.examen-form-container .form-group select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.examen-form-container .form-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.preguntas-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.preguntas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.preguntas-header label {
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0;
+}
+
+.pregunta-form {
+  background: white;
+  padding: 20px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 20px;
+}
+
+.opciones-section {
+  margin-top: 15px;
+}
+
+.opciones-section > label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.opcion-item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.opcion-item input[type="text"] {
+  flex: 1;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #64748b;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+
+.btn-remove-opcion {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.btn-remove-opcion:hover {
+  background: #dc2626;
+}
+
+.preguntas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.pregunta-card {
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.pregunta-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  background: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.pregunta-number {
+  font-weight: 600;
+  color: #475569;
+  font-size: 13px;
+}
+
+.btn-remove-pregunta {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.btn-remove-pregunta:hover {
+  background: #dc2626;
+}
+
+.pregunta-content {
+  padding: 15px;
+}
+
+.pregunta-content p {
+  margin: 0 0 10px 0;
+  color: #1a202c;
+}
+
+.pregunta-meta {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.badge-tipo,
+.badge-puntos {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge-tipo {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.badge-puntos {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.pregunta-opciones {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.opcion-display {
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  background: #f8f9fa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.opcion-display.correcta {
+  background: #dcfce7;
+  border-color: #86efac;
+}
+
+.badge-correcta {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  background: #22c55e;
+  color: white;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 30px;
+  color: #94a3b8;
+  background: white;
+  border-radius: 6px;
+  border: 2px dashed #cbd5e1;
+  font-size: 13px;
+}
+
+.examen-form-container .btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.examen-form-container .btn-primary {
+  background: #3b82f6;
+  color: white;
+}
+
+.examen-form-container .btn-primary:hover {
+  background: #2563eb;
+}
+
+.examen-form-container .btn-secondary {
+  background: #64748b;
+  color: white;
+}
+
+.examen-form-container .btn-secondary:hover {
+  background: #475569;
+}
+
+.examen-form-container .btn-sm {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+

@@ -1,0 +1,115 @@
+.badge-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.badge-display-small {
+  gap: 8px;
+}
+
+.badge-display-large {
+  gap: 16px;
+}
+
+.badge-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, var(--badge-color, #4A90E2) 0%, color-mix(in srgb, var(--badge-color, #4A90E2) 80%, black) 100%);
+  border-radius: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.badge-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.badge-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.badge-item:hover::before {
+  left: 100%;
+}
+
+.badge-display-small .badge-item {
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.badge-display-large .badge-item {
+  padding: 14px 20px;
+  border-radius: 30px;
+}
+
+.badge-icon {
+  font-size: 24px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.badge-display-small .badge-icon {
+  font-size: 18px;
+}
+
+.badge-display-large .badge-icon {
+  font-size: 32px;
+}
+
+.badge-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.badge-name {
+  font-weight: 700;
+  font-size: 14px;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.badge-display-small .badge-name {
+  font-size: 12px;
+}
+
+.badge-display-large .badge-name {
+  font-size: 16px;
+}
+
+.badge-description {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.badge-display-small .badge-description {
+  font-size: 10px;
+}
+
+.badge-display-large .badge-description {
+  font-size: 13px;
+  max-width: 300px;
+}
+
